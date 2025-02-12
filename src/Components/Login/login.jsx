@@ -1,21 +1,30 @@
 import "./login.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { login } from "../../services/api";
 
 const Login = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    navigate("/feed"); // Navega para o feed após o login
+    try {
+      await login(email, password);
+      navigate("/feed");
+    // eslint-disable-next-line no-unused-vars
+    } catch (error) {
+      setError("Email ou senha inválidos");
+    }
   };
 
   return (
     <div className="container">
       <form onSubmit={handleSubmit}>
         <h1>Acesse o sistema</h1>
+        {error && <div className="error-message">{error}</div>}
         <div className="input-field">
           <input 
             className="card" 
